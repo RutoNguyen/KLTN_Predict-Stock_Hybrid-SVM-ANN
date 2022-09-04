@@ -1,1 +1,1 @@
-# KLTN_Predict-Stock_Hybrid-SVM-ANN
+# Predict stock with Model Hybrid of SVM and ANN
