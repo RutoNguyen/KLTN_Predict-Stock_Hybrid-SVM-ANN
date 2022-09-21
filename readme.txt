@@ -8,3 +8,7 @@ streamlit run main.py
 
 - Nghiên cứu tổng quan sử dụng các thuật toán dự báo
 - Các phương pháp tối ưu tham số, cách chọn các tham số của thuật toán, thầy gửi thêm tài liệu.
+
+###Stock Exchange
+http://stockboard.sbsc.com.vn/apps/StockBoard/SBSC/HOSE.html
+https://iboard.ssi.com.vn/
