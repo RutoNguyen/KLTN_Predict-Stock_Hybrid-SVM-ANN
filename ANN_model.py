@@ -8,16 +8,21 @@ def model_ann(df,X_train,y_train,X_test,y_test,split,scaler):
     model_ANN = Sequential()
     model_ANN.add(LSTM(units=96, return_sequences=True, input_shape=(X_train.shape[1], 1)))
     model_ANN.add(Dropout(0.2))
+    # for i in range(n_Layer):
+    #     model_ANN.add(LSTM(units=96,return_sequences=True))
+    #     model_ANN.add(Dropout(0.2))
+    model_ANN.add(LSTM(units=96,return_sequences=True))
+    model_ANN.add(Dropout(0.2))         
     model_ANN.add(LSTM(units=96,return_sequences=True))
     model_ANN.add(Dropout(0.2))
-    model_ANN.add(LSTM(units=96,return_sequences=True))
-    model_ANN.add(Dropout(0.2))
+    
     model_ANN.add(LSTM(units=96))
     model_ANN.add(Dropout(0.2))
+    
     model_ANN.add(Dense(units=1))
-
+    
+    
     model_ANN.compile(optimizer='adam', loss='mse',metrics=['mae'])
-
     epochs_hist = model_ANN.fit(X_train, y_train, epochs=50, batch_size=32,  verbose=1, validation_split=0.2)
     model_ANN.save('stock_prediction_ANN.h5')
     #load_model('stock_prediction_ANN.h5')

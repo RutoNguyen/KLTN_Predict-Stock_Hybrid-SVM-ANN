@@ -53,7 +53,6 @@ def calculate(x,y):
     def MAPE(Y_actual,Y_Predicted):
         mape = np.mean(np.abs((Y_actual - Y_Predicted)/Y_actual))*100
         return mape
-    
     mape_ann = MAPE(x,y)
     RegScoreFun = r2_score(x,y)
     meanAbsoluteError_ann = mean_absolute_error(x,y)
