@@ -1,0 +1,11 @@
+#streamlit
+conda install -c conda-forge streamlit
+conda install -c plotly plotly
+
+#sklearn
+conda install -c anaconda scikit-learn
+
+pandas
+numpy
+pip install yfinance --upgrade --no-cache-dir
+python -m pip install prophet

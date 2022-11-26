@@ -1,19 +1,18 @@
 #https://github.com/MarkusSagen/stockpredictor-streamlit/blob/master/main.py
 import datetime
+from tkinter import END
 
 import pandas as pd
 import streamlit as st
-import yfinance as yf
-
-from fbprophet import Prophet
-from fbprophet.plot import plot_plotly
+#python -m pip install prophet
+from prophet import Prophet
+from prophet.plot import plot_plotly
 from plotly import graph_objects as go
-
-
+#pip install yfinance --upgrade --no-cache-dir
+import yfinance as yf
 DATE_FORMAT = "%Y-%m-%d"
 START = "2015-01-01"
 TODAY = datetime.date.today().strftime(DATE_FORMAT)
-
 
 # Main app
 st.title("Stock prediction app")
@@ -21,19 +20,25 @@ st.title("Stock prediction app")
 stocks = ("AAPL", "GOOG", "MSFT", "GME")
 select_stocks = st.selectbox("Select stock for prediction", stocks)
 
-@st.cache # now don't have to re-download on changing data
+#@st.cache # now don't have to re-download on changing data
 def load_data(ticker):
-    data = yf.download(ticker, START, TODAY)
+    #data = yf.Ticker(ticker, START, TODAY)
+    #goog = yf.Ticker(ticker)
+    #data = goog.history(start=START, end=TODAY)
+    data = yf.download([ticker], start='2021-1-10', end='2021-12-30', group_by='ticker')
+    
+    
     data.reset_index(inplace=True)
     return data
 
 data_load_state = st.text("Load data...")
-data: pd.DataFrame = load_data(select_stocks)
+#data: pd.DataFrame = load_data(select_stocks)
+data = load_data(select_stocks)
+data = pd.DataFrame(data)
 data_load_state.text("Loading data... done!")
 
 st.subheader("Raw data")
 st.write(data.tail())
-
 
 def plot_raw_data(data: pd.DataFrame):
     fig = go.Figure()
@@ -74,8 +79,6 @@ def plot_raw_data(data: pd.DataFrame):
     st.plotly_chart(fig)
 
 plot_raw_data(data)
-
-
 # Forcasting
 df_train: pd.DataFrame = data[["Date", "Close"]]
 df_train = df_train.rename(columns={"Date": "ds", "Close": "y"})
@@ -84,6 +87,7 @@ st.subheader("Forecast data")
 num_years = st.slider("Years of prediction", 1, 5)
 DURATION = num_years * 365 # FIXME:
 
+st.write(DURATION)
 m = Prophet()
 m.fit(df_train)
 future: pd.DataFrame = m.make_future_dataframe(periods=DURATION)

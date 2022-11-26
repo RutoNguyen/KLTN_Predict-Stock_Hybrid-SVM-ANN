@@ -1,28 +1,23 @@
 # import funtion from file
-###
-import base64
-from email.mime import image
-
-import numpy as np
-# Library
-import pandas as pd
-import streamlit as st
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-
-import SVM_model
-import ANN_model
-import backpropagation
+from sklearn.metrics import mean_squared_error, mean_absolute_error
 
 import load_data
 import plot
-
-
+from ANN_model import *
+from SVM_model import *
+# Library
+import pandas as pd
+import numpy as np
+from sklearn.metrics import r2_score
+import streamlit as st
+###
+import base64
+from email.mime import image
 #import plotly.express as px
 #@st.experimental_memo
 st.set_page_config(
     page_title="Stock Price Prediction", page_icon="📊", initial_sidebar_state="expanded"
 )
-# def background():
 # def get_img_as_base64(file):
 #     with open(file, "rb") as f:
 #         data = f.read()
@@ -62,7 +57,6 @@ st.set_page_config(
 # n_epochs = 50
 # n_batch_size = 32
 ###
-#    return 0
 
 # dataset = load_data.train_test_set(df,optionColums,split)
 # df,X_train,y_train,X_test,y_test,scaler = dataset[0],dataset[1],dataset[2],dataset[3],dataset[4],dataset[5]
@@ -71,8 +65,6 @@ st.set_page_config(
 # ANN_model
 ####
 # @st.cache()
-########################--------------------------ANN---------------------------#########################################
-#########################################################################################################################
 def MODEL_ANN():
     dataset = load_data.train_test_set(df, optionColums, split)
     df_op, X_train, y_train, X_test, y_test, scaler = dataset[
@@ -84,8 +76,8 @@ def MODEL_ANN():
     # n_epochs = 50
     # n_batch_size = 32
     ###
-    st.header('ANN Model')
-    df_ann, df_forecast_ann = ANN_model.df_model_ann(
+    st.header('*** ANN Model ***')
+    df_ann,df_forecast_ann = df_model_ann(
         df_op[optionColums], X_train, y_train, X_test, y_test, split, scaler,n_Layer,n_units,n_Dropout,n_epochs,n_batch_size)
     # df_ann = df_ann.drop([optionColums])
     st.write('Actually & Predict ANN Model', df_ann)
@@ -114,16 +106,13 @@ def MODEL_ANN():
     # forecast ANN
     st.write('forecast 15 days next-ANN', df_forecast_ann)
     return df_ann, df_forecast_ann
-########################--------------------------SVM---------------------------######################################
-
-#########################################################################################################################
 def MODEL_SVM():
     dataset = load_data.train_test_set(df, optionColums, split)
     df_op, X_train, y_train, X_test, y_test, scaler = dataset[
         0], dataset[1], dataset[2], dataset[3], dataset[4], dataset[5]
     ###
-    st.header('SVM Model')
-    df_svm, df_forecast_svm, svm_confidence = SVM_model.df_model_svm(
+    st.header('*** SVM Model ***')
+    df_svm, df_forecast_svm, svm_confidence = df_model_svm(
         df_op[optionColums], X_train, y_train, X_test, y_test, split, scaler)
     # df_svm,df_forecast_svm,svm_confidence = SVM_model.model_svm(svm_df[optionColums],X_train_svm,y_train_svm,X_test_svm,y_test_svm,split_svm,scaler_svm )
     ###
@@ -154,15 +143,15 @@ def MODEL_SVM():
                     'Real price', df_svm['Predict_svm'], 'Predict_svm')
     #
     # forecast ANN
-    st.write('forecast 15 days next-SVM', df_forecast_svm)
+    st.write('forecast 15 days next-ANN', df_forecast_svm)
     return df_svm, df_forecast_svm
 ########################--------------------------HYBRID---------------------------######################################
 
 #########################################################################################################################
 
 def Hybrid():
-    # df_svm, df_forecast_svm = MODEL_SVM()
-    # df_ann, df_forecast_ann = MODEL_ANN()
+    df_svm, df_forecast_svm = MODEL_SVM()
+    df_ann, df_forecast_ann = MODEL_ANN()
     ####
     st.header('Hybrid SVM and ANN')
     st.write('Gọi L(t) là giá trị dự báo của mô hình SVM,N(t)^ là giá trị dự báo của mô hình ANN(LSTM), giá trị dự báo của y được tính như sau')
@@ -275,97 +264,89 @@ def Hybrid():
 st.title('Stock Forecast App 📈 📉 ')
 #st.markdown("# Main page 🎈")
 ######################################
-with st.form(key ='Form1'):
-    #******************Sidebar
-    with st.sidebar:
-        st.sidebar.header("Sidebar")
-        st.sidebar.subheader('Query parameters')
-        # Data URL
-        dataset = ('VN_Index_Historical_Data(2011-2022)_C',
-                'VN_30_Historical_Data(15-22)_C',
-                'VN_Index_Historical_Data_C')
-        option = st.selectbox('Select dataset for prediction', dataset)
-        DATA_URL = ('./Data/'+option+'.csv')
-        ####
-        # up load file
-        uploaded_file = st.file_uploader("Choose a file .csv", type=['csv'])
-        # load data
-        ####
-        if uploaded_file is not None:
-            data_load_state = st.text('Loading data...')
-            df = load_data.dataF(uploaded_file)
-            data_load_state = st.text('Loading data... done!')
-            # df = pd.read_csv(uploaded_file)
-            st.write("filename:", uploaded_file.name)
-        else:
-            df = load_data.dataF(DATA_URL)
-        ####
-        ###
-        # Choose predictive variables
-        dataColumns = ('Price', 'Open', 'High', 'Low')
-        # dataColumns = list(df.columns)
-        optionColums = st.sidebar.selectbox('Choose predictive variables', dataColumns)
-        ratio_train = st.sidebar.select_slider(
-            'Select percentage of train dataset',
-            options=[60, 70, 80, 90],
-            value=(80)
-        )
+#******************Sidebar
+with st.sidebar:
+    st.sidebar.header("Sidebar")
+    st.sidebar.subheader('Query parameters')
+    # Data URL
+    dataset = ('VN_Index_Historical_Data(2011-2022)_C',
+            'VN_30_Historical_Data(15-22)_C',
+            'VN_Index_Historical_Data_C')
+    option = st.selectbox('Select dataset for prediction', dataset)
+    DATA_URL = ('./Data/'+option+'.csv')
+    ####
+    # up load file
+    uploaded_file = st.file_uploader("Choose a file .csv", type=['csv'])
+    # load data
+    ####
+    if uploaded_file is not None:
+        data_load_state = st.text('Loading data...')
+        df = load_data.dataF(uploaded_file)
+        data_load_state = st.text('Loading data... done!')
+        # df = pd.read_csv(uploaded_file)
+        st.write("filename:", uploaded_file.name)
+    else:
+        df = load_data.dataF(DATA_URL)
+    ####
+    ###
+    # Choose predictive variables
+    dataColumns = ('Price', 'Open', 'High', 'Low')
+    # dataColumns = list(df.columns)
+    optionColums = st.sidebar.selectbox('Choose predictive variables', dataColumns)
+    ratio_train = st.sidebar.select_slider(
+        'Select percentage of train dataset',
+        options=[60, 70, 80, 90],
+        value=(80)
+    )
+    ratio_test = 100 - ratio_train
+    if ratio_train == 80:
         ratio_test = 100 - ratio_train
-        if ratio_train == 80:
-            ratio_test = 100 - ratio_train
-            st.sidebar.write(
-                'The percentage of the train dataset is:', ratio_train, '%')
-            st.sidebar.write(
-                'The percentage of the test dataset is:', ratio_test, '%')
-        else:
-            ratio_test = 100 - ratio_train
-            st.sidebar.write(
-                'The percentage of the train dataset is:', ratio_train, '%')
-            st.sidebar.write(
-                'The percentage of the test dataset is:', ratio_test, '%')
-        ###################################################################
-        ###################################################################
-        st.markdown("### Parameters LSTM")
-        n_Layer = st.number_input(
-            label="Number of layers",
-            value=3,
-            format="%d",
-            min_value=1
-        )
-        n_units = st.number_input(
-            label="Number Units, số lượng neural ",
-            value=96,
-            format="%d",
-            min_value=2
-        )
-        n_Dropout = st.slider(
-            "Dropout,bỏ qua một vài neural trong quá trình train.",
-            min_value=0.01,
-            max_value=0.9,
-            value=0.2,
-            step=0.01
-        )
-        n_epochs = st.number_input(
-            label="Number Epochs, Số lần thuật toán học tập sẽ chuyển qua toàn bộ tập dữ liệu train, hãy cố gắng tăng thêm >500",
-            value=50,
-            format="%d",
-            min_value=1,
-            max_value=1000
-        )
-        n_batch_size = st.number_input(
-            label="batch_size, Số lượng mẫu dữ liệu sẽ sử dụng trên mỗi lần train",
-            value=32,
-            format="%d",
-            min_value=10
-        )
-        st.form_submit_button(label = 'Apply changes🔎')
-        #submit = st.button("Apply changes", on_click=process)
-tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Preview","SVM Model", "ANN Model", "Hybrid Model","backpropagation Model","📈 Chart", "🗃 Data"])
-#with st.container():
-with tab1:
-#with st.container():
+        st.sidebar.write(
+            'The percentage of the train dataset is:', ratio_train, '%')
+        st.sidebar.write(
+            'The percentage of the test dataset is:', ratio_test, '%')
+    else:
+        ratio_test = 100 - ratio_train
+        st.sidebar.write(
+            'The percentage of the train dataset is:', ratio_train, '%')
+        st.sidebar.write(
+            'The percentage of the test dataset is:', ratio_test, '%')
+    ###################################################################
+    st.markdown("### Parameters LSTM")
+    n_Layer = st.number_input(
+        label="Number of layers",
+        value=3,
+        format="%d",
+        min_value=1
+    )
+    n_units = st.number_input(
+        label="Number Units, số lượng neural ",
+        value=96,
+        format="%d",
+        min_value=2
+    )
+    n_Dropout = st.slider(
+        "Dropout,bỏ qua một vài neural trong quá trình train.",
+        min_value=0.01,
+        max_value=0.9,
+        value=0.2,
+        step=0.01
+    )
+    n_epochs = st.number_input(
+        label="Number Epochs, Số lần thuật toán học tập sẽ chuyển qua toàn bộ tập dữ liệu train, hãy cố gắng tăng thêm >500",
+        value=50,
+        format="%d",
+        min_value=1,
+        max_value=1000
+    )
+    n_batch_size = st.number_input(
+        label="batch_size, Số lượng mẫu dữ liệu sẽ sử dụng trên mỗi lần train",
+        value=32,
+        format="%d",
+        min_value=10
+    )
+with st.container():
     # columns of dataframe
-    st.header('Preview data')
     col_count = len(df.columns)
     st.write('Number of columns of data sets: ', col_count)
     # rows of dataframe
@@ -381,17 +362,13 @@ with tab1:
     ###
     split = int(ratio_train/100 * (len(df)-15))
 
+tab1, tab2, tab3,tab4, tab5 = st.tabs(["SVM Model", "ANN Model", "Hybrid Model","📈 Chart", "🗃 Data"])
+with tab1:
+    MODEL_SVM()
 with tab2:
-    df_svm, df_forecast_svm = MODEL_SVM()
-#with tab3:
-#    df_ann, df_forecast_ann  = MODEL_ANN()
-#with tab4:
-#    Hybrid()
-#with tab5:
-#    backpropagation.backPro()
-
+    MODEL_ANN()
+with tab3:
+    Hybrid()
 # with st.container():
 #     #st.header("Big one")
 #     Hybrid()
-
-

@@ -1,0 +1,31 @@
+
+#conda info --envs
+
+conda create --name tf python=3.9        ### "tf" is the name of enviroment
+#conda deactivate               ### stop activate
+conda activate tf               ### open activate
+#conda install -c conda-forge cudatoolkit=11.2 cudnn=8.1.0          ### run with GPU
+
+#pip install --upgrade pip
+#pip install tensorflow
+python3 -c "import tensorflow as tf; print(tf.reduce_sum(tf.random.normal([1000, 1000])))"          ### check setting CPU is done.
+#python3 -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"                ### check setting GPU is done.
+
+pip install -r requirements.txt
+
+#conda install --file requirements.txt
+#conda create --name <environment_name> --file requirements.txt
+#########Chạy chương trình
+### Mở cửa sổ cmd tại nơi lưu file main.py sau đó nhập câu lệnh:
+python main_page.py
+### Không đóng cửa sổ cmd này
+### Sau đó mở cửa sổ cmd mới tại nơi lưu file main.py chạy lệnh:
+streamlit run main.py
+### Cửa sổ mới sẽ mở trong trình duyệt tại địa chỉ:http://localhost:8501/
+
+- Nghiên cứu tổng quan sử dụng các thuật toán dự báo
+- Các phương pháp tối ưu tham số, cách chọn các tham số của thuật toán, thầy gửi thêm tài liệu.
+
+###Stock Exchange
+http://stockboard.sbsc.com.vn/apps/StockBoard/SBSC/HOSE.html
+https://iboard.ssi.com.vn/

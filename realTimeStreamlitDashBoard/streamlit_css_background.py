@@ -1,4 +1,5 @@
 import base64
+from email.mime import image
 import streamlit as st
 import plotly.express as px
 
@@ -9,12 +10,16 @@ def get_img_as_base64(file):
         data = f.read()
     return base64.b64encode(data).decode()
 
-img = get_img_as_base64("photo.jfif")
+img = get_img_as_base64("./image/photo.jfif")
+imgB = get_img_as_base64("./image/background.jfif")
+#background-image: url("data:image/png;base64,%s");
+#background-image: url("https://images.unsplash.com/photo-1501426026826-31c667bdf23d");
+#background-size: 180%;
 page_bg_img = f"""
 <style>
 [data-testid="stAppViewContainer"] > .main {{
-    background-image: url("https://images.unsplash.com/photo-1501426026826-31c667bdf23d");
-    background-size: 180%;
+    background-image: url("data:image/png;base64,{imgB}");
+    background-size: cover;
     background-position: top left;
     background-repeat: no-repeat;
     background-attachment: local;

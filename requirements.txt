@@ -1,0 +1,12 @@
+#streamlit 10/11
+tensorflow
+streamlit
+plotly
+#sklearn
+scikit-learn
+pandas
+numpy
+yfinance
+prophet
+#tensorflow == 2.6
+#keras == 2.6

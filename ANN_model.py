@@ -3,29 +3,29 @@ from keras.layers import LSTM, Dense, Dropout
 import numpy as np
 import pandas as pd
 
-def model_ann(df,X_train,y_train,X_test,y_test,split,scaler):
 
+def df_model_ann(df,X_train,y_train,X_test,y_test,split,scaler,n_Layer,n_units,n_Dropout,n_epochs,n_batch_size):
     model_ANN = Sequential()
-    model_ANN.add(LSTM(units=96, return_sequences=True, input_shape=(X_train.shape[1], 1)))
-    model_ANN.add(Dropout(0.2))
-    # for i in range(n_Layer):
-    #     model_ANN.add(LSTM(units=96,return_sequences=True))
-    #     model_ANN.add(Dropout(0.2))
-    model_ANN.add(LSTM(units=96,return_sequences=True))
-    model_ANN.add(Dropout(0.2))         
-    model_ANN.add(LSTM(units=96,return_sequences=True))
-    model_ANN.add(Dropout(0.2))
+    model_ANN.add(LSTM(units=n_units, return_sequences=True, input_shape=(X_train.shape[1], 1)))
+    model_ANN.add(Dropout(n_Dropout))
     
-    model_ANN.add(LSTM(units=96))
-    model_ANN.add(Dropout(0.2))
+    for i in range(n_Layer):
+        model_ANN.add(LSTM(units=n_units,return_sequences=True))
+        model_ANN.add(Dropout(n_Dropout))
+    # model_ANN.add(LSTM(units=96,return_sequences=True))
+    # model_ANN.add(Dropout(0.2))
+    # model_ANN.add(LSTM(units=96,return_sequences=True))
+    # model_ANN.add(Dropout(0.2))   
+    
+    model_ANN.add(LSTM(units=n_units))
+    model_ANN.add(Dropout(n_Dropout))
     
     model_ANN.add(Dense(units=1))
     
-    
     model_ANN.compile(optimizer='adam', loss='mse',metrics=['mae'])
-    epochs_hist = model_ANN.fit(X_train, y_train, epochs=50, batch_size=32,  verbose=1, validation_split=0.2)
-    model_ANN.save('stock_prediction_ANN.h5')
-    #load_model('stock_prediction_ANN.h5')
+    epochs_hist = model_ANN.fit(X_train, y_train, epochs=n_epochs, batch_size=n_batch_size,  verbose=1, validation_split=0.2)
+    model_ANN.save('./save_model/stock_prediction_ANN.h5')
+    model_ANN = load_model('./save_model/stock_prediction_ANN.h5')
     #epochs_hist = load_model('stock_prediction_ANN.h5')
     #print(epochs_hist.history.keys())
     

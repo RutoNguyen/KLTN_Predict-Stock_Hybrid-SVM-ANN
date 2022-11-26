@@ -11,7 +11,7 @@ from sklearn.metrics import confusion_matrix, accuracy_score
 # print(confusion_matrix(y_test,y_pred))
 # print(classification_report(y_test,y_pred))
 # SVM Classifier
-def model_svm(df,X_train,y_train,X_test,y_test,split,scaler):
+def df_model_svm(df,X_train,y_train,X_test,y_test,split,scaler):
     # try:
     #     os.remove('./results/problem_5_SVM.txt')
     # except OSError:
@@ -27,9 +27,11 @@ def model_svm(df,X_train,y_train,X_test,y_test,split,scaler):
     # df_kernels= pd.DataFrame(arr_kernels,columns=['linear','poly','rbf','sigmoid'])
     # return df_kernels
     ####################
+    
     #svr_poly = SVR(kernel='poly', C=1e3,degree = 2)
     #svr_poly.fit(X_train,y_train)
     svr_rbf = SVR(kernel='rbf', C=1e3, gamma=0.1)
+    
     svr_rbf.fit(X_train,y_train)
     #svr_sigmoid = SVR(kernel='sigmoid', C=1e3, gamma=0.1)
     #svr_sigmoid.fit(X_train,y_train)
