@@ -1,0 +1,11 @@
+
+
+Phương pháp dự báo error để fill up GAP giữa predicted value và ground truth thường được sử dụng trong lớp mô hình dự báo về timeseries nhằm tăng độ chính xác của mô hình. Đặc biệt là TH chuỗi timeseries có hiện tượng phần dư tự tượng quan (residual auto-correlation).
+- Để lấy giá trị predict1 thì xây dựng mô hình hồi qui f1 trên biến đầu vào X và biến mục tiêu y. Áp dụng phương trình f1(X) = predict1.
+- Để lấy giá trị predict2 thì cần tính được chuỗi phần dưa dựa trên resid = y-predict1 = y - f1(X). Xây dựng mô hình hồi qui f2 trên đầu vào X và biến mục tiêu resid hoặc đầu vào là lag của resid và biến mục tiêu resid tùy vào lựa chọn của.
+
+sau khi có predict1 từ SVMmodel(X,y) thì dùng y(giá trị thực tế) - predict1 sẽ cho ra resid(bao gồm các giá trị âm hoặc dương), sau đó sẽ dùng ANNmodel(X,resid) hoặc ANNmodel(lag_resid,resid) để tìm predict2 đúng không ạ.
+
+-SVM phân loại vậy input và out put của nó như thế nào để phân loại.
+
+Lựa chọn tham số,

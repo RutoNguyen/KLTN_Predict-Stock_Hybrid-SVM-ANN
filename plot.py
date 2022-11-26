@@ -8,7 +8,6 @@ import plotly.express as px
 #DATA_URL = ('C:/Users/nhat0/Documents/TLCN/MyProject/data/VN_Index_Historical_Data(2011-2022)_C.csv')
 #df = load_data.data(DATA_URL)
 
-
 def plot_x1(df,name):
     ##note
     fig = go.Figure()
@@ -26,6 +25,8 @@ def plot_x1(df,name):
     fig.update_xaxes(showgrid=True, ticklabelmode="period")
     fig.show()
     #
+    #st.line_chart(x)
+     #st.plotly_chart(px.scatter(x))
     st.plotly_chart(px.scatter(df, x="sepal_width",
                     y="sepal_length", color="species"))
 def plot_x(x, name_of_x):
@@ -36,9 +37,7 @@ def plot_x(x, name_of_x):
     ax.set_title('Chart of ' + name_of_x, fontsize=25, fontweight='bold')
     plt.grid(color='green', linestyle='--', linewidth=0.5)
     ax.legend()
-    st.line_chart(x)
     st.plotly_chart(fig,use_container_width=True,sharing="streamlit")
-    st.plotly_chart(px.scatter(x))
     st.pyplot(fig, clear_figure=True)
 
 def plot_x_y(x, name_of_x, y, name_of_y):
