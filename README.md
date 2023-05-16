@@ -1,6 +1,6 @@
 # Prediction Stock Model Hybrid of SVM and ANN
 A prediction model implemented using artificial neural networks and support vector machine.
-<img src="[link_anh_cua_ban](https://github.com/RutoNguyen/KLTN_Predict-Stock_Hybrid-SVM-ANN/blob/main/image/Chart_of_Close_and_Predict.png)">
+<img src="https://github.com/RutoNguyen/KLTN_Predict-Stock_Hybrid-SVM-ANN/blob/main/image/Chart_of_Close_and_Predict.png">
 # Algorithms Used
 ## Support Vector Machine
 Support vector machines are supervised learning models with associated learning algorithms that analyze data for classification and regression analysis.
